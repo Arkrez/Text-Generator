@@ -1,6 +1,7 @@
 const sample = document.querySelector("#sample-text");
 const createTBtn = document.querySelector(".create-table");
 const map = {};
+let searched = false;
 const createTable = function(words){
     
     
@@ -75,6 +76,7 @@ const createMarkovTable = function(matrix, textSample = ""){
 const matrixToPercent = function(matrix){
     let i = 0;
     let divisor = 1;
+    console.log(matrix)
     for(let j = 0; j < matrix.length; j++)
     {
         let sub = 0;
@@ -106,29 +108,45 @@ const matrixToPercent = function(matrix){
 
 const generateText = function(matrix, words){
     let text = ""
-    let word = words[0];
+    let word = words[Math.floor(Math.random() * words.length)];
     let i = 0;
-    let newWord = words[0];
+    let newWord = words[Math.floor(Math.random() * words.length)];
+    console.log(words)
+    //console.log(matrix)
     while(i < 200)
     {
-        console.log(i)
-        let rand = Math.random().toFixed(4);
-        let diff = 1;
+        let max = 0;
         let j = 0;
-        
-        let changed = false;
-        
         for(j = 0; j < matrix[0].length; j++)
         {
-            if(matrix[map[word]][j]=== 0) continue;
+            max = Math.max(max, matrix[map[word]][j]);
+        }
+        
+        let rand = (Math.random() * max).toFixed(4);
+        let diff = 1;
+        
+        
+        let changed = false;
+        let builder = [];
+        for(j = 0; j < matrix[0].length; j++)
+        {
+            if(matrix[map[word]][j]== 0) continue;
             let x = Math.abs(rand - matrix[map[word]][j]).toFixed(4);
-           
-            if(rand > x){
+            
+            if(diff > x){
+                
                 changed = true;
-                rand = x;
+                diff = x;
             
                 newWord = words[j];
+                builder= [words[j]];
                 
+            } else if(diff == x)
+            {
+                
+                builder.push(words[j]);
+                changed = true;
+                newWord = builder[Math.floor(Math.random() * builder.length)];
             }
             
         }
@@ -146,13 +164,21 @@ const generateText = function(matrix, words){
     }
     return text;
 }
+let words, table, markov;
 createTBtn.addEventListener('click', function(e){
     e.stopPropagation();
     let newDiv = document.createElement("div");
-    let words = findWords(sample.value)
-    let table = createTable(words);
-    let markov = createMarkovTable(matrixToPercent(table), sample.value);
-    console.log(markov)
+    //console.log(searched)
+    if(!searched)
+    {
+        words = findWords(sample.value)
+        table = createTable(words);
+        markov = createMarkovTable(matrixToPercent(table), sample.value);
+        //console.log(markov)
+        searched = true;
+    }
+    
+    
     let text = generateText(markov, words)
     newDiv.textContent = text;
     document.querySelector("body").append(text);
