@@ -115,37 +115,23 @@ const generateText = function(matrix, words){
     //console.log(matrix)
     while(i < 200)
     {
-        let max = 0;
         let j = 0;
        
         let rand = Math.random() ;
        
-        
-        let changed = false;
-        let builder = [];
         for(j = 0; j < matrix[0].length; j++)
         {
-            if(matrix[map[word]][j]== 0) continue;
+            if(matrix[map[word]][j]=== 0) continue;
             rand -= matrix[map[word]][j];
-            
             if(rand <= 0){
-                
-                changed = true;
             
                 newWord = words[j];
                 break;
                 
-            }/* else if(diff == x)
-            {
-                
-                builder.push(words[j]);
-                changed = true;
-                newWord = builder[Math.floor(Math.random() * builder.length)];
             }
-            */
         }
         
-        if(!changed){
+        if(rand > 0){
             let x = Math.floor(Math.random() * words.length);
             
             newWord = words[x];
