@@ -117,38 +117,32 @@ const generateText = function(matrix, words){
     {
         let max = 0;
         let j = 0;
-        for(j = 0; j < matrix[0].length; j++)
-        {
-            max = Math.max(max, matrix[map[word]][j]);
-        }
-        
-        let rand = (Math.random() * max).toFixed(4);
-        let diff = 1;
-        
+       
+        let rand = Math.random() ;
+       
         
         let changed = false;
         let builder = [];
         for(j = 0; j < matrix[0].length; j++)
         {
             if(matrix[map[word]][j]== 0) continue;
-            let x = Math.abs(rand - matrix[map[word]][j]).toFixed(4);
+            rand -= matrix[map[word]][j];
             
-            if(diff > x){
+            if(rand <= 0){
                 
                 changed = true;
-                diff = x;
             
                 newWord = words[j];
-                builder= [words[j]];
+                break;
                 
-            } else if(diff == x)
+            }/* else if(diff == x)
             {
                 
                 builder.push(words[j]);
                 changed = true;
                 newWord = builder[Math.floor(Math.random() * builder.length)];
             }
-            
+            */
         }
         
         if(!changed){
